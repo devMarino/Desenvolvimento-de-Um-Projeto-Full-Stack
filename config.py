@@ -1,5 +1,5 @@
 import os
-from donenv import load_dotenv
+from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
