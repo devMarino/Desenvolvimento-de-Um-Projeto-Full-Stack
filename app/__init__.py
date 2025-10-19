@@ -1,26 +1,15 @@
 from flask import Flask
-from flask_migrate import Migrate
-from .models import db
-from config import Config
-from .seed import init_cli
+from app.config import Config
+from app.extensions import db, migrate
+from app.routes import register_blueprints
 
-migrate = Migrate()
-
-def create_app(config_class=Config):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config_class)
+    app.config.from_object(Config)
 
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app import models
-
-    init_cli(app) # Inicializa os comandos CLI personalizados
-
-    with app.app_context():
-        try:
-            db.create_all() #cria a tabela do banco
-        except:
-            print("Erro, o banco já existe") #caso ja tenha sido criaddo
+    register_blueprints(app)
 
     return app
