@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `pedido` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
 	`cliente_id` INTEGER NOT NULL,
 	`preco_total` DECIMAL(10, 2) NOT NULL,
-	`status` ENUM() NOT NULL,
+	`status` ENUM('cancelado', 'pendente', 'entregue') NOT NULL,
 	PRIMARY KEY(`id`)
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `cliente` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
 	`nome` VARCHAR(100) NOT NULL,
 	`cpf` VARCHAR(16) NOT NULL,
-	`cnpj` VARCHAR(16), NULL,
+	`cnpj` VARCHAR(16) NULL,
 	`email` VARCHAR(100) NOT NULL,
 	`endereco` VARCHAR(200) NOT NULL,
 	PRIMARY KEY(`id`)

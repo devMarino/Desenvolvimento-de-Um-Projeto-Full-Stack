@@ -2,7 +2,10 @@ from flask import Flask
 from config import Config
 from app.extensions import db, migrate
 from app.routes import register_blueprints
+
 #from app.seed import init_cli
+
+app = Flask(__name__)
 
 def create_app():
     app = Flask(__name__)
