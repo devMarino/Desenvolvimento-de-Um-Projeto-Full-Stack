@@ -5,9 +5,9 @@ class Cliente(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
-    cpf = db.Column(db.String(16))
-    cnpj = db.Column(db.String(16))
-    email = db.Column(db.String(100))
-    endereco = db.Column(db.String(200))
+    cpf = db.Column(db.String(16), nullable=False)
+    cnpj = db.Column(db.String(16), nullable=True)
+    email = db.Column(db.String(100), nullable=False)
+    endereco = db.Column(db.String(200), nullable=False)
 
-    atendimentos = db.relationship('Atendimento', backref='cliente', lazy=True)
+    pedidos = db.relationship('Pedido', back_populates='cliente')

@@ -1,12 +1,12 @@
 from app import db
-from sqlalchemy import Enum
 
 class Pedido(db.Model):
     __tablename__ = 'pedido'
 
     id = db.Column(db.Integer, primary_key=True)
-    preco_total = db.Column(db.Numeric(10, 2))
-    status = db.Column(Enum('pendente', 'confirmado', 'cancelado', name='status_enum'))
     cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
+    preco_total = db.Column(db.Numeric(10, 2), nullable=False)
+    status = db.Column(db.Enum('ABERTO', 'FECHADO', 'CANCELADO', name='pedido_status'), nullable=False)
 
-    itens_pedido = db.relationship('ItemPedido', backref='pedido', lazy=True)
+    cliente = db.relationship('Cliente', back_populates='pedidos')
+    itens_pedido = db.relationship('ItemPedido', back_populates='pedido')

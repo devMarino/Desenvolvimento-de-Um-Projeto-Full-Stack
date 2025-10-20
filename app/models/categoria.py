@@ -6,4 +6,4 @@ class Categoria(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
 
-    itens = db.relationship('Item', backref='categoria', lazy=True)
+    itens = db.relationship('Item', back_populates='categoria')

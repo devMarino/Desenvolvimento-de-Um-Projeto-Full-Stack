@@ -1,9 +1,9 @@
 from app import db
+from .cliente import Cliente
+from .pedido import Pedido
+from .item import Item
+from .categoria import Categoria
+from .fornecedor import Fornecedor
+from .item_pedido import ItemPedido
+from .atendimento import Atendimento
 
-from app.models.categoria import Categoria
-from app.models.cliente import Cliente
-from app.models.fornecedor import Fornecedor
-from app.models.item import Item
-from app.models.pedido import Pedido
-from app.models.item_pedido import ItemPedido
-from app.models.atendimento import Atendimento
