@@ -7,12 +7,12 @@ fornecedor_bp = Blueprint('fornecedor', __name__)
 @fornecedor_bp.route('/', methods=['GET'])
 def get_all_fornecedores():
     fornecedores = Fornecedor.query.all()
-    return jsonify([f.__dict__ for f in fornecedores])
+    return jsonify([f.to_dict() for f in fornecedores])
 
 @fornecedor_bp.route('/<int:id>', methods=['GET'])
 def get_fornecedor(id):
     fornecedor = Fornecedor.query.get_or_404(id)
-    return jsonify(fornecedor.__dict__)
+    return jsonify(fornecedor.to_dict())
 
 @fornecedor_bp.route('/', methods=['POST'])
 def create_fornecedor():

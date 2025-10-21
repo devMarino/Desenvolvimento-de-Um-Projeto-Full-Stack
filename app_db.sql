@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `item` (
 	`nome` VARCHAR(100) NOT NULL,
 	`descricao` VARCHAR(300) NOT NULL,
 	`preco` DECIMAL(10, 2) NOT NULL,
-	`tipo` ENUM('produto', 'servico') NOT NULL,
+	`tipo` ENUM('PRODUTO', 'SERVICO') NOT NULL,
 	`estoque` INTEGER NOT NULL,
 	`categoria_id` INTEGER NOT NULL,
 	`fornecedor_id` INTEGER NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `pedido` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
 	`cliente_id` INTEGER NOT NULL,
 	`preco_total` DECIMAL(10, 2) NOT NULL,
-	`status` ENUM('cancelado', 'pendente', 'entregue') NOT NULL,
+	`status` ENUM('CANCELADO', 'PENDENTE', 'ENTREGUE') NOT NULL,
 	PRIMARY KEY(`id`)
 );
 
@@ -86,3 +86,38 @@ ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE `item`
 ADD FOREIGN KEY(`fornecedor_id`) REFERENCES `fornecedor`(`id`)
 ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+
+
+USE app_db;
+
+INSERT INTO categoria (nome)
+VALUES ('Eletrônicos'), ('Serviços');
+
+INSERT INTO fornecedor (nome, telefone, email, endereco)
+VALUES
+('Tech Supply Ltda', '(11) 99999-9999', 'contato@techsupply.com', 'Av. Paulista, 1000 - São Paulo'),
+('Serviços Pro Ltda', '(21) 98888-8888', 'contato@servicospro.com', 'Rua das Laranjeiras, 50 - Rio de Janeiro');
+
+INSERT INTO item (nome, descricao, preco, tipo, estoque, categoria_id, fornecedor_id)
+VALUES
+('Notebook Lenovo IdeaPad 3', 'Notebook com processador Ryzen 5, 8GB RAM, SSD 256GB', 3499.90, 'PRODUTO', 10, 1, 1),
+('Instalação de Software', 'Serviço de instalação e configuração de software no equipamento', 150.00, 'SERVICO', 999, 2, 2);
+
+INSERT INTO cliente (nome, cpf, cnpj, email, endereco)
+VALUES ('João da Silva', '123.456.789-00', NULL, 'joao.silva@email.com', 'Rua das Flores, 45 - Rio de Janeiro');
+
+INSERT INTO pedido (cliente_id, preco_total, status)
+VALUES
+(1, 3499.90, 'PENDENTE'),
+(1, 150.00, 'ENTREGUE');
+
+INSERT INTO item_pedido (pedido_id, item_id, quantidade)
+VALUES
+(1, 1, 1),
+(2, 2, 1);
+
+INSERT INTO atendimento (data_atendimento, item_pedido_id)
+VALUES
+(CURDATE(), 1),

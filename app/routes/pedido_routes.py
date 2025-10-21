@@ -7,12 +7,12 @@ pedido_bp = Blueprint('pedido', __name__)
 @pedido_bp.route('/', methods=['GET'])
 def get_all_pedidos():
     pedidos = Pedido.query.all()
-    return jsonify([p.__dict__ for p in pedidos])
+    return jsonify([p.to_dict() for p in pedidos])
 
 @pedido_bp.route('/<int:id>', methods=['GET'])
 def get_pedido(id):
     pedido = Pedido.query.get_or_404(id)
-    return jsonify(pedido.__dict__)
+    return jsonify(pedido.to_dict())
 
 @pedido_bp.route('/', methods=['POST'])
 def create_pedido():

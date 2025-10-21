@@ -7,12 +7,12 @@ categoria_bp = Blueprint('categoria', __name__)
 @categoria_bp.route('/', methods=['GET'])
 def get_all_categorias():
     categorias = Categoria.query.all()
-    return jsonify([c.__dict__ for c in categorias])
+    return jsonify([c.to_dict() for c in categorias])
 
 @categoria_bp.route('/<int:id>', methods=['GET'])
 def get_categoria(id):
     categoria = Categoria.query.get_or_404(id)
-    return jsonify(categoria.__dict__)
+    return jsonify(categoria.to_dict())
 
 @categoria_bp.route('/', methods=['POST'])
 def create_categoria():

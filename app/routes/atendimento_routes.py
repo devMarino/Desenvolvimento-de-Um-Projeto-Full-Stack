@@ -7,12 +7,12 @@ atendimento_bp = Blueprint('atendimento', __name__)
 @atendimento_bp.route('/', methods=['GET'])
 def get_all_atendimentos():
     atendimentos = Atendimento.query.all()
-    return jsonify([a.__dict__ for a in atendimentos])
+    return jsonify([a.to_dict() for a in atendimentos])
 
 @atendimento_bp.route('/<int:id>', methods=['GET'])
 def get_atendimento(id):
     atendimento = Atendimento.query.get_or_404(id)
-    return jsonify(atendimento.__dict__)
+    return jsonify(atendimento.to_dict())
 
 @atendimento_bp.route('/', methods=['POST'])
 def create_atendimento():

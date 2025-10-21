@@ -7,12 +7,12 @@ cliente_bp = Blueprint('cliente', __name__)
 @cliente_bp.route('/', methods=['GET'])
 def get_all_clientes():
     clientes = Cliente.query.all()
-    return jsonify([c.__dict__ for c in clientes])
+    return jsonify([c.to_dict() for c in clientes])
 
 @cliente_bp.route('/<int:id>', methods=['GET'])
 def get_cliente(id):
     cliente = Cliente.query.get_or_404(id)
-    return jsonify(cliente.__dict__)
+    return jsonify(cliente.to_dict())
 
 @cliente_bp.route('/', methods=['POST'])
 def create_cliente():

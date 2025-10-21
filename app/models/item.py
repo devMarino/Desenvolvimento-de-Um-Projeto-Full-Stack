@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy.inspection import inspect
 
 class Item(db.Model):
     __tablename__ = 'item'
@@ -15,3 +16,6 @@ class Item(db.Model):
     categoria = db.relationship('Categoria', back_populates='itens')
     fornecedor = db.relationship('Fornecedor', back_populates='itens')
     itens_pedido = db.relationship('ItemPedido', back_populates='item')
+
+    def to_dict(self):
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
