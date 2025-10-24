@@ -5,14 +5,33 @@ from decimal import Decimal
 import random
 from datetime import datetime, timedelta
 
-from .models import * # Importa todos os modelos definidos
-
+# Importa os modelos do __init__.py da pasta models
+from .models import *
 
 @click.command('seed', help='Popula o banco de dados com dados iniciais para testes.')
 @with_appcontext
 def seed_command():
     """Comando CLI para popular o banco de dados."""
     
+    # --- ETAPA ADICIONADA: Limpa dados antigos ---
+    try:
+        print("➡️ Limpando dados antigos (Atendimento, ItemPedido, Pedido, Item, Cliente, Categoria, Fornecedor)...")
+        # Limpa em ordem de dependência (do "filho" para o "pai")
+        db.session.query(Atendimento).delete()
+        db.session.query(ItemPedido).delete()
+        db.session.query(Pedido).delete()
+        db.session.query(Item).delete()
+        db.session.query(Cliente).delete()
+        db.session.query(Categoria).delete()
+        db.session.query(Fornecedor).delete()
+        db.session.commit()
+        print(" ... Dados antigos limpos com sucesso.")
+    except Exception as e:
+        db.session.rollback()
+        print(f"  - ERRO ao limpar dados: {e}")
+        print("  - Tentando continuar mesmo assim...")
+    # --- FIM DA ETAPA ADICIONADA ---
+
     # 1. População de Dados de Referência
     seed_categorias()
     seed_fornecedores()
@@ -21,17 +40,17 @@ def seed_command():
     # 2. População de Itens (Unifica Produtos e Serviços)
     seed_items()
     
-    # 3. População de Transações (Fluxo: Pedido -> Item_Pedido -> Atendimento)
-    # A ordem foi invertida para seguir a chave estrangeira item_pedido_id em atendimento
+    # 3. População de Transações 
     seed_transacoes()
     
     print("\n✅ BANCO DE DADOS TOTALMENTE POPULADO (10+ exemplos de cada)!")
 
 
-# --- FUNÇÕES DE SEEDING BÁSICAS (Sem alterações, apenas mantendo a sintaxe) ---
+# --- FUNÇÕES DE SEEDING BÁSICAS ---
 
 def seed_categorias():
     print("\n➡️ Iniciando seed: CATEGORIAS...")
+    # Verifica se já foi populado (agora é seguro, pois limpamos antes)
     if Categoria.query.count() > 0:
         print("  - Categorias já existem. Pulando.")
         return
@@ -65,14 +84,9 @@ def seed_fornecedores():
         {'nome': 'Tintas do Brasil', 'tel': '(51) 94444-5555', 'email': 'loja@tintasbr.com', 'end': 'Rua do Pigmento, 10'},
         {'nome': 'Madeireira Premium', 'tel': '(61) 96666-7777', 'email': 'madeiras@premium.com', 'end': 'Rod. das Árvores, 5'},
         {'nome': 'Ferragens União', 'tel': '(71) 98888-9999', 'email': 'ferragens@uniao.com', 'end': 'Rua do Aço, 40'},
-        {'nome': 'Jardim Verde', 'tel': '(81) 91010-1010', 'email': 'jardim@verde.com', 'end': 'Rua das Flores, 15'},
-        {'nome': 'Lux Iluminação', 'tel': '(91) 91212-1212', 'email': 'lux@ilumina.com', 'end': 'Av. da Luz, 80'},
-        {'nome': 'Portas & Cia', 'tel': '(11) 93434-3434', 'email': 'portas@cia.com', 'end': 'Rua das Esquadrias, 12'},
     ]
-    
     for obj in fornecedores_data:
         db.session.add(Fornecedor(nome=obj['nome'], telefone=obj['tel'], email=obj['email'], endereco=obj['end']))
-
     try:
         db.session.commit()
         print(f"  - {len(fornecedores_data)} Fornecedores adicionados.")
@@ -92,17 +106,9 @@ def seed_clientes():
         {'nome': 'Ana Souza', 'cpf': '987.654.321-11', 'cnpj': None, 'email': 'ana@pf.com', 'end': 'Travessa B, 5'},
         {'nome': 'Reforma Rápida ME', 'cpf': None, 'cnpj': '33.444.555/0001-44', 'email': 'contato@reforma.com', 'end': 'Rua dos Empreiteiros, 15'},
         {'nome': 'João Oliveira', 'cpf': '101.202.303-22', 'cnpj': None, 'email': 'joao@pf.com', 'end': 'Rua 7 de Setembro, 88'},
-        {'nome': 'Elétrica Segura Ltda', 'cpf': None, 'cnpj': '66.777.888/0001-55', 'email': 'financeiro@eletrica.com', 'end': 'Av. dos Eletricistas, 10'},
-        {'nome': 'Maria Santos', 'cpf': '404.505.606-33', 'cnpj': None, 'email': 'maria@pf.com', 'end': 'Rua do Porto, 30'},
-        {'nome': 'Pinturas Artísticas', 'cpf': None, 'cnpj': '99.000.111/0001-66', 'email': 'pinturas@artistica.com', 'end': 'Rua do Aquarela, 5'},
-        {'nome': 'Carlos Ferreira', 'cpf': '707.808.909-44', 'cnpj': None, 'email': 'carlos@pf.com', 'end': 'Rua da Praia, 12'},
-        {'nome': 'Pedro Rocha', 'cpf': '111.222.333-55', 'cnpj': None, 'email': 'pedro@pf.com', 'end': 'Rua da Montanha, 25'},
-        {'nome': 'Loja de Bairros', 'cpf': None, 'cnpj': '12.345.678/0001-90', 'email': 'bairros@loja.com', 'end': 'Rua do Comércio, 3'}
     ]
-    
     for obj in clientes_data:
         db.session.add(Cliente(nome=obj['nome'], cpf=obj['cpf'], cnpj=obj['cnpj'], email=obj['email'], endereco=obj['end']))
-    
     try:
         db.session.commit()
         print(f"  - {len(clientes_data)} Clientes adicionados.")
@@ -123,52 +129,61 @@ def seed_items():
     
     itens_data = []
 
-    # 1. DADOS DE PRODUTOS (tipo='produto', tem estoque)
+    # 1. DADOS DE PRODUTOS (tipo='PRODUTO', tem estoque)
+    # *** CORRIGIDO: Adicionando 'img_url' e + 2 produtos ***
     produtos_data = [
-        {'nome': 'Martelo Unha 500g', 'cat': 'Ferramentas Manuais', 'preco': 25.50, 'qtd': 50, 'desc': 'Martelo de alta resistência.'},
-        {'nome': 'Tubo PVC 100mm', 'cat': 'Hidráulica', 'preco': 45.90, 'qtd': 80, 'desc': 'Tubo para esgoto.'},
-        {'nome': 'Fio Flexível 2.5mm', 'cat': 'Elétrica', 'preco': 89.90, 'qtd': 100, 'desc': 'Rolo de 100m.'},
-        {'nome': 'Porcelanato Polido 60x60', 'cat': 'Pisos e Revestimentos', 'preco': 59.99, 'qtd': 300, 'desc': 'Caixa com 2m².'},
-        {'nome': 'Tinta Acrílica Branca 18L', 'cat': 'Tintas e Acessórios', 'preco': 250.00, 'qtd': 50, 'desc': 'Galão de tinta profissional.'},
-        {'nome': 'Saco de Cimento CP V 50kg', 'cat': 'Cimento e Argamassa', 'preco': 32.00, 'qtd': 200, 'desc': 'Cimento de alta qualidade.'},
-        {'nome': 'Telha Cerâmica Romana', 'cat': 'Madeiras e Telhados', 'preco': 3.50, 'qtd': 1000, 'desc': 'Telha tradicional.'},
-        {'nome': 'Parafuso Philips 4x40mm (Caixa)', 'cat': 'Ferragens', 'preco': 50.00, 'qtd': 50, 'desc': 'Caixa com 1000 parafusos.'},
-        {'nome': 'Lâmpada LED 9W', 'cat': 'Iluminação', 'preco': 10.00, 'qtd': 300, 'desc': 'Lâmpada econômica.'},
+        {'nome': 'Martelo Unha 500g', 'cat': 'Ferramentas Manuais', 'preco': 25.50, 'qtd': 50, 'desc': 'Martelo de alta resistência.', 'img': 'martelo_unha.jpg'},
+        {'nome': 'Tubo PVC 100mm', 'cat': 'Hidráulica', 'preco': 45.90, 'qtd': 80, 'desc': 'Tubo para esgoto.', 'img': 'tubo_pvc.jpg'},
+        {'nome': 'Fio Flexível 2.5mm', 'cat': 'Elétrica', 'preco': 89.90, 'qtd': 100, 'desc': 'Rolo de 100m.', 'img': 'fio_flexivel.jpg'},
+        {'nome': 'Porcelanato Polido 60x60', 'cat': 'Pisos e Revestimentos', 'preco': 59.99, 'qtd': 300, 'desc': 'Caixa com 2m².', 'img': 'porcelanato.jpg'},
+        {'nome': 'Tinta Acrílica Branca 18L', 'cat': 'Tintas e Acessórios', 'preco': 250.00, 'qtd': 50, 'desc': 'Galão de tinta profissional.', 'img': 'tinta_acrilica.jpg'},
+        {'nome': 'Saco de Cimento CP V 50kg', 'cat': 'Cimento e Argamassa', 'preco': 32.00, 'qtd': 200, 'desc': 'Cimento de alta qualidade.', 'img': 'saco_cimento.jpg'},
+        {'nome': 'Telha Cerâmica Romana', 'cat': 'Madeiras e Telhados', 'preco': 3.50, 'qtd': 1000, 'desc': 'Telha tradicional.', 'img': 'telha_ceramica.jpg'},
+        {'nome': 'Parafuso Philips 4x40mm (Caixa)', 'cat': 'Ferragens', 'preco': 50.00, 'qtd': 50, 'desc': 'Caixa com 1000 parafusos.', 'img': 'parafuso_philips.jpg'},
+        {'nome': 'Lâmpada LED 9W', 'cat': 'Iluminação', 'preco': 10.00, 'qtd': 300, 'desc': 'Lâmpada econômica.', 'img': None},
+        # +2 PRODUTOS (como pedido)
+        {'nome': 'Chave de Fenda Philips', 'cat': 'Ferramentas Manuais', 'preco': 15.00, 'qtd': 70, 'desc': 'Chave com ponta magnética.', 'img': None},
+        {'nome': 'Torneira de Cozinha Bica Alta', 'cat': 'Hidráulica', 'preco': 120.00, 'qtd': 30, 'desc': 'Torneira cromada.', 'img': None},
     ]
     for data in produtos_data:
         cat_id = categorias_map.get(data['cat'])
         if cat_id:
+            # Garante que haja fornecedores antes de tentar escolher um
+            if not fornecedores_ids:
+                print("  - ERRO: Não há fornecedores para associar aos itens.")
+                continue
             forn_id = random.choice(fornecedores_ids)
-            # Nota: O campo 'estoque' no SQL é NOT NULL, serviços com 'estoque=None' vão falhar.
-            # O modelo SQL é inconsistente com serviços que não têm estoque. 
-            # Mantendo 'estoque' para produtos.
+            
             itens_data.append(
                 Item(
-                    nome=data['nome'], descricao=data['desc'], tipo='PRODUTO', # 'PRODUTO' em ENUM no SQL
+                    nome=data['nome'], descricao=data['desc'], tipo='PRODUTO', # 'PRODUTO' em ENUM (MAIÚSCULA)
                     categoria_id=cat_id, preco=Decimal(data['preco']), 
-                    estoque=data['qtd'], fornecedor_id=forn_id
+                    estoque=data['qtd'], fornecedor_id=forn_id,
+                    imagem_url=data['img'] # *** CAMPO ADICIONADO ***
                 )
             )
 
-    # 2. DADOS DE SERVIÇOS (tipo='servico', estoque=0)
+    # 2. DADOS DE SERVIÇOS (tipo='SERVICO', estoque=0)
     servicos_data = [
         {'nome': 'Instalação Elétrica Completa', 'cat': 'Elétrica', 'preco': 350.00, 'desc': 'Mão de obra por ponto de luz/tomada.'},
         {'nome': 'Consultoria de Cores', 'cat': 'Tintas e Acessórios', 'preco': 80.00, 'desc': 'Ajuda especializada na escolha de tintas.'},
         {'nome': 'Conserto Hidráulico', 'cat': 'Hidráulica', 'preco': 150.00, 'desc': 'Reparo de vazamentos.'},
         {'nome': 'Assentamento de Piso (m²)', 'cat': 'Pisos e Revestimentos', 'preco': 45.00, 'desc': 'Valor por m² instalado.'},
-        {'nome': 'Pintura Residencial (m²)', 'cat': 'Tintas e Acessórios', 'preco': 20.00, 'desc': 'Mão de obra por m² pintado.'},
-        {'nome': 'Corte de Madeira (unidade)', 'cat': 'Madeiras e Telhados', 'preco': 5.00, 'desc': 'Serviço de corte sob medida.'},
     ]
     for data in servicos_data:
         cat_id = categorias_map.get(data['cat'])
         if cat_id:
+            if not fornecedores_ids:
+                print("  - ERRO: Não há fornecedores para associar aos itens.")
+                continue
             forn_id = random.choice(fornecedores_ids)
-            # Para serviços, definimos 'estoque=0' para satisfazer o NOT NULL no SQL.
+            
             itens_data.append(
                 Item(
-                    nome=data['nome'], descricao=data['desc'], tipo='SERVICO', # 'SERVICO' em ENUM no SQL
+                    nome=data['nome'], descricao=data['desc'], tipo='SERVICO', # 'SERVICO' em ENUM (MAIÚSCULA)
                     categoria_id=cat_id, preco=Decimal(data['preco']), 
-                    estoque=0, fornecedor_id=forn_id # Corrigido para 0, pois 'estoque' é NOT NULL no SQL
+                    estoque=0, fornecedor_id=forn_id, # Estoque 0 ou nulo para serviço
+                    imagem_url=None # Serviços não têm imagem
                 )
             )
 
@@ -180,7 +195,7 @@ def seed_items():
         db.session.rollback()
         print(f"  - ERRO ao adicionar itens: {e}")
 
-# --- FUNÇÃO DE SEEDING DE TRANSAÇÕES CORRIGIDA ---
+# --- FUNÇÃO DE SEEDING DE TRANSAÇÕES ---
 
 def seed_transacoes():
     print("➡️ Iniciando seed: TRANSAÇÕES (Pedido -> Item_Pedido -> Atendimento)...")
@@ -188,25 +203,15 @@ def seed_transacoes():
     clientes_obj = Cliente.query.all()
     itens_obj = Item.query.all()
     
-    # 🚨 PONTO DE VERIFICAÇÃO: Se itens_obj estiver vazio, as transações falharão.
     if not (clientes_obj and itens_obj):
         print("  - Dados mestres (Clientes e Itens) insuficientes. Pulando transações.")
-        return
-
-    produtos = [i for i in itens_obj if i.tipo == 'PRODUTO']
-    servicos = [i for i in itens_obj if i.tipo == 'SERVICO']
-    
-    # Se não há produtos NEM serviços (o que deve ser a causa do erro):
-    if not itens_obj:
-        print("  - Não há produtos ou serviços cadastrados. Pulando transações.")
         return
 
     pedidos_list = []
     itens_pedido_list = []
     atendimentos_list = []
     
-    # 20 é um bom número para garantir transações
-    NUM_TRANSACOES = 20
+    NUM_TRANSACOES = 15 # Criando 15 pedidos de exemplo
 
     for i in range(1, NUM_TRANSACOES + 1):
         data_transacao = datetime.now() - timedelta(days=random.randint(1, 90))
@@ -221,25 +226,19 @@ def seed_transacoes():
             status=random.choice(status_opcoes)
         )
         db.session.add(novo_pedido)
-        db.session.flush() 
+        db.session.flush() # Pega o ID do novo_pedido antes do commit
         
         preco_total_pedido = Decimal('0.00')
 
         # 2. Adiciona ITENS_PEDIDO
-        
-        # LÓGICA SIMPLIFICADA E GARANTIDA: Seleciona 1 a 4 itens aleatórios do total
-        
-        # O número de itens a adicionar ao pedido
-        num_itens_para_pedido = random.randint(1, min(4, len(itens_obj)))
-        
-        # Seleciona a amostra final para o pedido de TODA a lista de itens
+        num_itens_para_pedido = random.randint(1, min(3, len(itens_obj)))
         itens_para_pedido = random.sample(itens_obj, k=num_itens_para_pedido)
         
         item_pedido_para_atendimento = None 
 
         for it in itens_para_pedido:
-            # Quantidade para produtos (1-5) ou serviços (1-2)
-            qtd = random.randint(1, 5) if it.tipo == 'PRODUTO' else random.randint(1, 2)
+            # Quantidade (1-5 para produto, 1 para serviço)
+            qtd = random.randint(1, 5) if it.tipo == 'PRODUTO' else 1
             
             item_p = ItemPedido(
                 pedido_id=novo_pedido.id,
@@ -247,26 +246,25 @@ def seed_transacoes():
                 quantidade=qtd
             )
             itens_pedido_list.append(item_p)
-            
-            preco_total_pedido += it.preco * qtd
             db.session.add(item_p)
+            
+            # Calcula o preço total do pedido
+            preco_total_pedido += (it.preco * qtd)
             
             # Guarda o primeiro ItemPedido para o Atendimento
             if item_pedido_para_atendimento is None:
                 item_pedido_para_atendimento = item_p
                 
-        db.session.flush() 
+        db.session.flush() # Pega os IDs dos item_p
 
-        # 3. Cria o ATENDIMENTO (somente se não for cancelado)
-        if novo_pedido.status != 'CANCELADO':
-            if item_pedido_para_atendimento:
-                novo_atendimento = Atendimento(
-                    data_atendimento=data_transacao,
-                    item_pedido_id=item_pedido_para_atendimento.id
-                )
-                atendimentos_list.append(novo_atendimento)
-                db.session.add(novo_atendimento)
-
+        # 3. Cria o ATENDIMENTO (somente se não for cancelado e houver um item_pedido)
+        if novo_pedido.status != 'CANCELADO' and item_pedido_para_atendimento:
+            novo_atendimento = Atendimento(
+                data_atendimento=data_transacao,
+                item_pedido_id=item_pedido_para_atendimento.id
+            )
+            atendimentos_list.append(novo_atendimento)
+            db.session.add(novo_atendimento)
 
         # 4. Atualiza o Total do Pedido
         novo_pedido.preco_total = preco_total_pedido

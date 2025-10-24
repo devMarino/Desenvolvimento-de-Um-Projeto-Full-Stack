@@ -13,3 +13,23 @@ class Atendimento(db.Model):
 
     def to_dict(self):
         return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+
+    @property
+    def cliente_obj(self):
+        """
+        Retorna o cliente relacionado a este atendimento,
+        navegando através do item_pedido → pedido → cliente.
+        """
+        try:
+            return self.item_pedido.pedido.cliente
+        except AttributeError:
+            return None
+
+    def to_dict(self):
+        data = {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}
+        # Se quiser incluir o nome do cliente no dicionário JSON:
+        if self.cliente_obj:
+            data["cliente_nome"] = self.cliente_obj.nome
+        else:
+            data["cliente_nome"] = None
+        return data

@@ -1,7 +1,9 @@
 class Config:
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root@localhost/flask_app"
-
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root@localhost/app_db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
-    # SECRET_KEY = "123"    # nao tem senha no meu banco
+    
+    # --- DESCOMENTE ESTA LINHA ---
+    SECRET_KEY = "sua-chave-secreta-pode-ser-qualquer-coisa" 
+    
     JSONIFY_PRETTYPRINT_REGULAR = True

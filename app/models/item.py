@@ -18,7 +18,7 @@ class Item(db.Model):
     # Verifica se o Enum está definido como 'PRODUTO'/'SERVICO' ou 'produto'/'servico'
     # Use o que for compatível com o resto do seu projeto. O frontend original usava minúsculas.
     # Vamos usar minúsculas aqui para compatibilidade com o frontend copiado.
-    tipo = db.Column(Enum('produto', 'servico', name='item_tipo'), nullable=False)
+    tipo = db.Column(Enum('PRODUTO', 'SERVICO', name='item_tipo'), nullable=False)
 
     estoque = db.Column(db.Integer, nullable=True) # Alterado para nullable=True (serviços não têm estoque)
 
