@@ -1,0 +1,358 @@
+/* --- TEMA LOJA DE CONSTRUÇÃO (PRETO, BRANCO, VERDE) --- */
+/* --- VERSÃO SOMENTE DESKTOP --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+    /* Cores que você pediu */
+    --cor-verde: #00b050;       /* Verde principal */
+    --cor-verde-escuro: #007d39;   /* Verde para hover */
+    --cor-preto: #1e1e1e;       /* Preto para fundos (menu/footer) */
+    --cor-preto-texto: #121212; /* Preto para textos */
+    --cor-branco: #ffffff;      /* Branco para fundos e textos */
+    
+    /* Cores de apoio */
+    --cor-cinza-claro: #f4f4f4;
+    --cor-cinza-borda: #e0e0e0;
+    --cor-cinza-texto: #666;
+}
+
+/* --- RESET BÁSICO --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--cor-branco);
+    color: var(--cor-preto-texto);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--cor-verde);
+    text-decoration: none;
+}
+
+img { max-width: 100%; }
+
+/* Container para centralizar o conteúdo */
+.top-bar-content, .header-content, .nav-content, .main-content, .footer-content, .copyright-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- 1. HEADER SUPERIOR (Preto) --- */
+.header-top-bar {
+    background-color: var(--cor-preto);
+    color: var(--cor-branco);
+    padding: 8px 0;
+    font-size: 0.85em;
+}
+.top-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.contact-info {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.contact-info span, .top-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.top-link {
+    color: var(--cor-branco);
+    transition: color 0.2s;
+}
+.top-link:hover {
+    color: var(--cor-verde);
+}
+
+/* --- 2. HEADER PRINCIPAL (Branco) --- */
+.header-main {
+    background-color: var(--cor-branco);
+    padding: 20px 0;
+    border-bottom: 1px solid var(--cor-cinza-borda);
+}
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+.logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--cor-verde-escuro);
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+/* Barra de Pesquisa */
+.search-box {
+    flex-grow: 1;
+    display: flex;
+    max-width: 600px;
+}
+#product-search {
+    width: 100%;
+    border: 2px solid var(--cor-cinza-borda);
+    border-right: none;
+    padding: 12px 15px;
+    font-size: 1em;
+    border-radius: 6px 0 0 6px;
+    outline: none;
+}
+#product-search:focus {
+    border-color: var(--cor-verde);
+}
+.search-btn {
+    background-color: var(--cor-verde);
+    color: var(--cor-branco);
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    align-items: center;
+}
+.search-btn:hover {
+    background-color: var(--cor-verde-escuro);
+}
+
+/* Ações (Carrinho) */
+.header-actions {
+    display: flex;
+}
+.action-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background-color: var(--cor-cinza-claro);
+    color: var(--cor-preto-texto);
+    border-radius: 6px;
+    font-weight: 500;
+}
+.action-link:hover {
+    background-color: var(--cor-cinza-borda);
+}
+
+/* --- 3. MENU DE NAVEGAÇÃO (Verde) --- */
+.category-nav {
+    background-color: var(--cor-verde);
+    padding: 10px 0;
+    position: relative; /* Necessário para o menu mobile */
+}
+.nav-content {
+    display: flex;
+    justify-content: space-between; /* Alinha botão e links */
+    align-items: center;
+}
+
+/* Botão Hamburger (Escondido no Desktop) */
+.menu-toggle {
+    display: none; /* Escondido por padrão */
+    background: none;
+    border: none;
+    color: var(--cor-branco);
+    cursor: pointer;
+    padding: 5px;
+}
+.menu-toggle i {
+    width: 28px;
+    height: 28px;
+}
+
+/* Links do Menu (Visíveis no Desktop) */
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+.nav-link {
+    color: var(--cor-branco);
+    font-weight: 500;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+.nav-link:hover {
+    background-color: var(--cor-verde-escuro);
+}
+
+/* --- 4. CONTEÚDO PRINCIPAL --- */
+.main-content {
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+/* Banner Principal */
+.hero-banner {
+    background-color: var(--cor-verde);
+    color: var(--cor-branco);
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.banner-content p {
+    font-size: 1.1em;
+}
+.banner-content h1 {
+    font-size: 3em;
+    margin: 10px 0 20px 0;
+}
+.banner-content h1 span {
+    color: #ffdd00; /* Amarelo destaque */
+}
+.btn-coupon {
+    background-color: var(--cor-preto);
+    color: var(--cor-branco);
+    border: none;
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-coupon:hover {
+    background-color: #333;
+}
+
+/* Seção de Produtos */
+.product-section h2 {
+    font-size: 1.8em;
+    color: var(--cor-preto-texto);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--cor-verde);
+    padding-bottom: 5px;
+    display: inline-block;
+}
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* Estilo para a mensagem de "Carregando..." */
+.loading-products {
+    text-align: center;
+    padding: 40px;
+    color: var(--cor-cinza-texto);
+    font-style: italic;
+    font-size: 1.1em;
+    /* Faz a mensagem ocupar a linha toda */
+    grid-column: 1 / -1; 
+}
+
+.product-card {
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.product-card:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.product-image-placeholder {
+    width: 100%;
+    height: 180px;
+    background-color: var(--cor-cinza-claro);
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+.product-card h3 {
+    font-size: 1.1em;
+    color: var(--cor-preto-texto);
+    margin-bottom: 5px;
+}
+.product-price {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: var(--cor-verde-escuro);
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+.btn-add-cart {
+    background-color: var(--cor-verde);
+    color: var(--cor-branco);
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-add-cart:hover {
+    background-color: var(--cor-verde-escuro);
+}
+
+/* --- 5. RODAPÉ (Preto) --- */
+.site-footer {
+    background-color: var(--cor-preto);
+    color: var(--cor-branco);
+    padding-top: 40px;
+    font-size: 0.9em;
+}
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    padding-bottom: 40px;
+}
+.footer-column h4 {
+    font-size: 1.2em;
+    color: var(--cor-verde);
+    margin-bottom: 15px;
+}
+.footer-column p, .footer-column a {
+    color: var(--cor-cinza-borda);
+    margin-bottom: 8px;
+    display: block;
+}
+.footer-column a:hover {
+    color: var(--cor-branco);
+}
+
+.footer-description {
+    color: var(--cor-cinza-texto); 
+    line-height: 1.5;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+.social-link {
+    display: inline-block;
+    color: var(--cor-cinza-borda);
+    transition: color 0.2s;
+}
+.social-link i {
+    width: 20px;
+    height: 20px;
+}
+.social-link:hover {
+    color: var(--cor-verde);
+}
+
+/* Barra de Copyright (Sem fundo preto) */
+.copyright-bar {
+    text-align: center;
+    padding: 20px 0; 
+    font-size: 0.8em;
+    color: var(--cor-cinza-texto);
+    /* Linha sutil para separar */
+    border-top: 1px solid var(--cor-cinza-borda); 
+}
+

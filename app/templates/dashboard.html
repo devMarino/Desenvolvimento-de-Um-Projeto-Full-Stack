@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Gestão de Serviços</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    </head>
+<body>
+
+    <header class="header-top-bar">
+        <div class="top-bar-content">
+            <div class="contact-info">
+                <span>(85) 91234-5678 (WhatsApp)</span>
+            </div>
+            <div class="admin-login">
+                <a href="{{ url_for('main.loja_index') }}" class="top-link">
+                    <i data-feather="log-out"></i> Sair do Painel
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <header class="header-main">
+        <div class="header-content">
+            <a href="{{ url_for('main.index') }}" class="logo">Gestão de Serviços</a>
+            <div class="header-actions">
+                 <span class="admin-indicator"><i data-feather="shield"></i> Painel do Admin</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="category-nav" id="category-nav">
+        <div class="nav-content">
+             <span style="color: white; font-weight: 500;">Gerenciamento (Clientes, Itens, Atendimentos)</span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <h1 class="page-title">Dashboard de Gestão</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-layout">
+            <section class="stat-card">
+                <h2>Total de Clientes</h2>
+                <p class="stat-card-value">{{ total_clientes }}</p>
+            </section>
+            <section class="stat-card">
+                <h2>Total de Itens</h2>
+                <p class="stat-card-value">{{ total_itens }}</p>
+            </section>
+             <section class="stat-card">
+                <h2>Total de Atendimentos</h2>
+                <p class="stat-card-value">{{ total_atendimentos }}</p>
+            </section>
+        </div>
+
+
+        <div class="dashboard-layout" style="margin-top: 30px;">
+            
+            <section class="add-product-form">
+                <h2>Cadastrar Novo Cliente</h2>
+                <form action="{{ url_for('main.add_cliente') }}" method="POST">
+                    <div class="form-group">
+                        <label for="nome_cliente">Nome do Cliente:</label>
+                        <input type="text" id="nome_cliente" name="nome_cliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_cliente">Email:</label>
+                        <input type="email" id="email_cliente" name="email_cliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone_cliente">Telefone:</label>
+                        <input type="text" id="telefone_cliente" name="telefone_cliente">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpf_cliente">CPF:</label>
+                        <input type="text" id="cpf_cliente" name="cpf_cliente">
+                    </div>
+                    <div class="form-group">
+                        <label for="endereco_cliente">Endereço:</label>
+                        <input type="text" id="endereco_cliente" name="endereco_cliente">
+                    </div>
+                    <button type="submit" class="btn-submit">Cadastrar Cliente</button>
+                </form>
+            </section>
+
+            <section class="add-product-form">
+                <h2>Cadastrar Item (Serviço/Produto)</h2>
+                <form action="{{ url_for('main.add_item') }}" method="POST">
+                    <div class="form-group">
+                        <label for="nome_item">Nome do Item:</label>
+                        <input type="text" id="nome_item" name="nome_item" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoria_id">Categoria:</label>
+                            <select id="categoria_id" name="categoria_id" required class="form-select">
+                                <option value="">Selecione...</option>
+                                {% for cat in categorias %}
+                                <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fornecedor_id">Fornecedor:</label>
+                            <select id="fornecedor_id" name="fornecedor_id" required class="form-select">
+                                <option value="">Selecione...</option>
+                                {% for forn in fornecedores %}
+                                <option value="{{ forn.id }}">{{ forn.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="valor_item">Valor (R$):</label>
+                            <input type="number" id="valor_item" name="valor_item" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo_item">Tipo:</label>
+                            <select id="tipo_item" name="tipo_item" required class="form-select">
+                                <option value="servico">Serviço</option>
+                                <option value="produto">Produto</option>
+                            </select>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label for="estoque_item">Estoque (0 para serviço):</label>
+                        <input type="number" id="estoque_item" name="estoque_item" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao_item">Descrição:</label>
+                        <textarea id="descricao_item" name="descricao_item" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Cadastrar Item</button>
+                </form>
+            </section>
+            
+            <section class="add-product-form">
+                <h2>Registrar Novo Atendimento</h2>
+                <form action="{{ url_for('main.add_atendimento') }}" method="POST">
+                    <div class="form-group">
+                        <label for="cliente_id">Cliente:</label>
+                        <select id="cliente_id" name="cliente_id" required class="form-select">
+                            <option value="">Selecione um cliente...</option>
+                            {% for cli in clientes %}
+                            <option value="{{ cli.id }}">{{ cli.nome }} ({{ cli.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="item_id">Serviço/Item:</label>
+                        <select id="item_id" name="item_id" required class="form-select">
+                            <option value="">Selecione um item...</option>
+                            {% for it in itens %}
+                            <option value="{{ it.id }}">{{ it.nome }} (R$ {{ "%.2f"|format(it.preco) }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observacoes">Observações:</label>
+                        <textarea id="observacoes" name="observacoes" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit" style="margin-top: 20px;">Registrar Atendimento</button>
+                </form>
+            </section>
+        </div> 
+
+        <section class="product-list" style="margin-top: 30px;">
+            <h2>Atendimentos Registrados</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Serviço/Item</th> <th>Observações</th> <th>Data</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for at in atendimentos %}
+                    <tr>
+                        <td>{{ at.id }}</td>
+                        <td>{{ at.cliente_obj.nome }}</td>
+                        <td>{{ at.item_obj.nome if at.item_obj else 'N/A' }}</td> <td>{{ at.observacoes if at.observacoes else '---' }}</td> <td>{{ at.data_atendimento.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('main.edit_atendimento', id=at.id) }}" class="btn-edit">Editar</a>
+                            <a href="{{ url_for('main.delete_atendimento', id=at.id) }}" onclick="return confirm('Tem certeza?')" class="btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="product-list" style="margin-top: 30px;">
+            <h2>Clientes Cadastrados</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cli in clientes %}
+                    <tr>
+                        <td>{{ cli.nome }}</td>
+                        <td>{{ cli.email }}</td>
+                        <td>{{ cli.telefone }}</td>
+                        <td>
+                            <a href="{{ url_for('main.edit_cliente', id=cli.id) }}" class="btn-edit">Editar</a>
+                            <a href="{{ url_for('main.delete_cliente', id=cli.id) }}" onclick="return confirm('Tem certeza?')" class="btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="product-list" style="margin-top: 30px;">
+            <h2>Itens Cadastrados (Serviços e Produtos)</h2>
+             <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for it in itens %}
+                    <tr>
+                        <td>{{ it.nome }}</td>
+                        <td>{{ it.tipo }}</td>
+                        <td>R$ {{ "%.2f"|format(it.preco) }}</td>
+                        <td>{{ it.estoque if it.estoque is not none else 'N/A' }}</td>
+                        <td>
+                            <a href="{{ url_for('main.edit_item', id=it.id) }}" class="btn-edit">Editar</a>
+                            <a href="{{ url_for('main.delete_item', id=it.id) }}" onclick="return confirm('Tem certeza?')" class="btn-delete">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script> 
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script> 
+    </body>
+</html>

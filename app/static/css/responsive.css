@@ -1,0 +1,85 @@
+/* --- CSS DE RESPONSIVIDADE (Mobile/Tablet) --- */
+/* --- Este arquivo se aplica a TODAS as páginas --- */
+
+/* --- Regras Gerais (Loja) --- */
+@media (max-width: 768px) {
+    
+    /* --- Header --- */
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .search-box {
+        width: 100%;
+        order: 3; /* Joga a busca para baixo */
+    }
+    .logo { order: 1; }
+    .header-actions { order: 2; }
+    
+    /* --- Menu Hamburger (3 pontinhos) --- */
+    .nav-content {
+        justify-content: flex-start; /* Alinha o botão à esquerda */
+    }
+
+    /* Mostra o botão hamburger */
+    .menu-toggle {
+        display: block; 
+    }
+    
+    /* Esconde os links por padrão no mobile */
+    .nav-links {
+        display: none;
+        
+        /* Faz eles aparecerem em coluna quando abertos */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 54px; /* Altura exata da barra verde */
+        left: 0;
+        background-color: var(--cor-verde-escuro); /* Fundo mais escuro */
+        padding: 10px;
+        z-index: 100;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+    
+    /* Classe que o JS vai adicionar */
+    .nav-links.nav-open {
+        display: flex;
+    }
+    
+    .nav-link {
+        padding: 12px 10px; /* Mais área de toque */
+    }
+
+    /* --- Conteúdo (Index) --- */
+    .banner-content h1 {
+        font-size: 2.2em;
+    }
+}
+
+/* --- Regras do Carrinho --- */
+@media (max-width: 900px) {
+    .carrinho-layout {
+        grid-template-columns: 1fr; /* Transforma em uma única coluna */
+    }
+    .cart-item-line {
+        flex-wrap: wrap;
+    }
+    .item-details {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .item-controls {
+        margin-right: 0;
+    }
+}
+
+/* --- Regras do Login --- */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+        border: none;
+        box-shadow: none;
+    }
+}

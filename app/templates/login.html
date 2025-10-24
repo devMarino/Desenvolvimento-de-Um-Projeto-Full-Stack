@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+
+    <title>Login | Magazine Construções</title>
+</head>
+<body class="login-body">
+    <div class="login-container">
+
+        <h1 class="logo-login">Magazine Construções</h1>
+        <p>Acesso Restrito ao Administrador</p>
+
+        <form method="GET" action="{{ url_for('main.index') }}" class="login-form">
+            <div class="form-group">
+                <label for="username">Usuário (E-mail):</label>
+                <input type="email" id="username" name="email" placeholder="seu.email@empresa.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" placeholder="Sua senha" required>
+            </div>
+            <button type="submit" class="btn-login">Entrar no Sistema</button>
+        </form>
+
+        <p class="back-to-site"><a href="{{ url_for('main.loja_index') }}">Voltar para a Loja</a></p>
+    </div>
+</body>
+</html>

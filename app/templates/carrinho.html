@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho | Magazine Construções</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+    <header class="header-top-bar">
+        <div class="top-bar-content">
+            <div class="contact-info">
+                 <a href="https://wa.me/5585912345678" target="_blank" class="top-link">
+                    <i data-feather="message-circle"></i>
+                    <span>(85) 91234-5678 (WhatsApp)</span>
+                </a>
+            </div>
+            <div class="admin-login">
+                <a href="{{ url_for('main.login') }}" class="top-link">
+                    <i data-feather="user"></i> Login do Admin
+                </a>
+            </div>
+        </div>
+    </header>
+    <header class="header-main">
+        <div class="header-content">
+            <a href="{{ url_for('main.loja_index') }}" class="logo">Magazine Construções</a>
+            <div class="search-box">
+                 <input type="text" id="product-search" placeholder="O que você está construindo hoje?">
+                 <button class="search-btn">
+                    <i data-feather="search"></i>
+                </button>
+            </div>
+            <div class="header-actions">
+                <a href="{{ url_for('main.carrinho') }}" class="action-link">
+                    <i data-feather="shopping-cart"></i>
+                    <span>Meu Carrinho</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">Meu Carrinho</h1>
+        <div class="carrinho-layout">
+            <div class="carrinho-step" id="cart-step">
+                <h2>Itens para Orçamento</h2>
+                <ul id="cart-list">
+                    <p class="loading-cart" id="loading-message">Carregando itens...</p>
+                    </ul>
+            </div>
+
+            <div class="carrinho-step" id="checkout-step" style="display: none;">...</div>
+
+            <div class="carrinho-resumo">
+                <h2>Resumo do Pedido</h2>
+                <div class="resumo-linha">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="resumo-linha total-line">
+                    <strong>Total a Pagar:</strong>
+                    <strong id="total-final">R$ 0,00</strong>
+                </div>
+                <button id="btn-next-step" class="btn-finalizar">
+                    <span>Continuar</span>
+                    <i data-feather="arrow-right"></i>
+                </button>
+                <p class="aviso-frete">Os valores de frete serão calculados na finalização.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">...</footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/carrinho.js') }}"></script> <script>
+        feather.replace();
+    </script>
+</body>
+</html>

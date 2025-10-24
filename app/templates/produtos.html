@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos | Magazine Construções</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+    <header class="header-top-bar">
+        <div class="top-bar-content">
+            <div class="contact-info">
+                <a href="https://wa.me/5585912345678" target="_blank" class="top-link">
+                    <i data-feather="message-circle"></i>
+                    <span>(85) 91234-5678 (WhatsApp)</span>
+                </a>
+            </div>
+            <div class="admin-login">
+                <a href="{{ url_for('main.login') }}" class="top-link">
+                    <i data-feather="user"></i> Login do Admin
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <header class="header-main">
+        <div class="header-content">
+            <a href="{{ url_for('main.loja_index') }}" class="logo">Magazine Construções</a>
+            <div class="search-box">
+                 <input type="text" id="product-search" placeholder="O que você está construindo hoje?">
+                 <button class="search-btn">
+                    <i data-feather="search"></i>
+                </button>
+            </div>
+            <div class="header-actions">
+                <a href="{{ url_for('main.carrinho') }}" class="action-link">
+                    <i data-feather="shopping-cart"></i>
+                    <span>Meu Carrinho</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="category-nav" id="category-nav">
+        <div class="nav-content">
+            <button class="menu-toggle" id="menu-toggle">
+                <i data-feather="menu"></i>
+            </button>
+            <div class="nav-links" id="nav-links">
+                <a href="{{ url_for('main.produtos', categoria='cimento-e-argamassa') }}" class="nav-link">Cimento e Argamassa</a>
+                <a href="{{ url_for('main.produtos', categoria='pisos-e-revestimentos') }}" class="nav-link">Pisos e Revestimentos</a>
+                <a href="{{ url_for('main.produtos', categoria='ferramentas') }}" class="nav-link">Ferramentas</a>
+                <a href="{{ url_for('main.produtos', categoria='hidraulica') }}" class="nav-link">Hidráulica</a>
+                <a href="{{ url_for('main.produtos', categoria='eletrica') }}" class="nav-link">Elétrica</a>
+                <a href="{{ url_for('main.produtos', categoria='madeiras') }}" class="nav-link">Madeiras</a>
+                <a href="{{ url_for('main.produtos', categoria='tintas') }}" class="nav-link">Tintas</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="page-title" id="categoria-titulo">Carregando...</h1>
+
+        <section class="product-section">
+            <div class="product-grid" id="product-grid">
+                <p class="loading-products" id="loading-message">Carregando produtos da categoria...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">...</footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/produtos.js') }}"></script>
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>

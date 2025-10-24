@@ -1,0 +1,313 @@
+/* --- ESTILOS DO CARRINHO (TEMA PRETO/BRANCO/VERDE) --- */
+/* --- VERSÃO SOMENTE DESKTOP --- */
+
+/* Título da Página (Meu Carrinho) */
+.page-title {
+    font-size: 1.8em;
+    color: var(--cor-preto-texto);
+    margin-bottom: 25px; /* Aumentei a margem inferior */
+    border-bottom: 3px solid var(--cor-verde); /* Linha mais grossa */
+    padding-bottom: 8px; /* Ajustei o padding */
+    display: inline-block;
+}
+
+.carrinho-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px; /* Aumentei o espaçamento */
+    margin-top: 15px;
+}
+
+/* Títulos das Seções (Itens, Checkout e Resumo) */
+.carrinho-step h2, .carrinho-resumo h2 {
+    font-size: 1.4em;
+    border-bottom: 2px solid var(--cor-verde); /* Linha verde */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: var(--cor-preto-texto);
+}
+
+#cart-list {
+    list-style: none;
+    padding: 0;
+}
+
+.cart-item-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0; /* Mais espaço vertical */
+    border-bottom: 1px solid var(--cor-cinza-borda);
+}
+.cart-item-line:last-child {
+    border-bottom: none;
+}
+
+.item-details {
+    flex-grow: 1;
+    padding-right: 15px; /* Espaço antes dos controles */
+}
+
+.item-name {
+    font-weight: 500; /* Um pouco menos bold */
+    display: block;
+    color: var(--cor-preto-texto);
+    font-size: 1.1em; /* Levemente maior */
+    margin-bottom: 3px;
+}
+
+.item-price-unit {
+    font-size: 0.9em;
+    color: var(--cor-cinza-texto);
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-input {
+    width: 60px; /* Pouco mais largo */
+    text-align: center;
+    padding: 8px; /* Mais padding */
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.btn-remove {
+    background-color: transparent;
+    color: #e74c3c;
+    border: none;
+    padding: 8px 12px; /* Mais padding */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s; /* Adiciona transição */
+}
+.btn-remove:hover {
+    background-color: #e74c3c;
+    color: var(--cor-branco);
+}
+
+/* Resumo do Pedido */
+.carrinho-resumo {
+    background: var(--cor-branco); /* Fundo branco */
+    padding: 25px; /* Mais padding */
+    border-radius: 8px;
+    height: fit-content;
+    border: 1px solid var(--cor-cinza-borda); /* Borda sutil */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra sutil */
+    grid-column: 2 / 3;
+    grid-row: 1 / 2; /* Fica na mesma linha das etapas */
+}
+
+.resumo-linha {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0; /* Mais espaço */
+    border-bottom: 1px dashed var(--cor-cinza-borda);
+    font-size: 0.95em; /* Leve ajuste no tamanho */
+}
+.resumo-linha span:first-child {
+    color: var(--cor-cinza-texto); /* Cinza para os labels */
+}
+.resumo-linha span:last-child {
+    font-weight: 500; /* Valores em semi-bold */
+}
+
+.total-line {
+    font-size: 1.3em; /* Total maior */
+    padding-top: 15px;
+    border-bottom: none;
+    color: var(--cor-preto-texto); /* Total em preto */
+}
+.total-line strong:last-child {
+    color: var(--cor-verde-escuro); /* Valor total em verde escuro */
+}
+
+/* --- Botão Principal (Continuar / Finalizar) ATUALIZADO --- */
+.btn-finalizar {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    font-size: 1.1em;
+    background-color: var(--cor-verde);
+    color: var(--cor-branco);
+    border: none;
+    font-weight: 700;
+    border-radius: 8px; /* Bordas mais arredondadas */
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s; /* Transições */
+    text-align: center;
+    text-decoration: none;
+    display: flex; /* Para alinhar texto e ícone */
+    align-items: center;
+    justify-content: center; /* Centraliza texto e ícone */
+    gap: 8px; /* Espaço entre texto e ícone */
+    box-shadow: 0 2px 4px rgba(0, 176, 80, 0.3); /* Sombra verde sutil */
+}
+.btn-finalizar:hover {
+    background-color: var(--cor-verde-escuro);
+    box-shadow: 0 4px 8px rgba(0, 125, 57, 0.4); /* Sombra mais forte no hover */
+}
+.btn-finalizar:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 2px rgba(0, 176, 80, 0.2); /* Sombra menor ao clicar */
+}
+
+/* Estilo do Ícone dentro do Botão */
+.btn-finalizar i {
+    width: 20px; /* Tamanho do ícone */
+    height: 20px;
+    stroke-width: 2.5; /* Deixa a linha do ícone mais grossa */
+}
+
+.aviso-frete {
+    font-size: 0.85em; /* Pouco maior */
+    color: var(--cor-cinza-texto);
+    text-align: center;
+    margin-top: 15px; /* Mais espaço */
+}
+
+/* Mensagem de Carregando */
+.loading-cart {
+    padding: 40px 20px; /* Mais padding */
+    text-align: center;
+    color: var(--cor-cinza-texto);
+    font-style: italic;
+    font-size: 1.1em; /* Maior */
+    min-height: 100px; /* Garante um espaço mínimo */
+    display: flex; /* Para centralizar verticalmente */
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Estilos da Etapa de Checkout --- */
+#checkout-step .form-group {
+    margin-bottom: 20px;
+}
+#checkout-step label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--cor-cinza-texto);
+    font-weight: 500;
+}
+#checkout-step input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: 6px;
+    font-size: 1em;
+}
+#checkout-step input[type="text"]:focus {
+    outline: none;
+    border-color: var(--cor-verde);
+}
+
+/* Título e Opções de Pagamento */
+.payment-title {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--cor-preto-texto);
+    margin-top: 30px; /* Espaço antes */
+    margin-bottom: 15px; /* Espaço depois */
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--cor-cinza-borda);
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px; /* Espaço antes do botão Voltar */
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 2px solid var(--cor-cinza-borda);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.payment-option input[type="radio"] {
+    display: none;
+}
+
+.payment-option i {
+    color: var(--cor-cinza-texto);
+    width: 20px;
+    height: 20px;
+}
+
+.payment-option span {
+    font-weight: 500;
+    color: var(--cor-preto-texto);
+}
+
+.payment-option:has(input[type="radio"]:checked) {
+    border-color: var(--cor-verde);
+    background-color: #f0fff8;
+}
+
+.payment-option:has(input[type="radio"]:checked) i,
+.payment-option:has(input[type="radio"]:checked) span {
+    color: var(--cor-verde-escuro);
+}
+
+.payment-option:hover {
+    border-color: var(--cor-verde);
+}
+
+/* Botão Voltar */
+.btn-voltar {
+    background: none;
+    border: none;
+    color: var(--cor-verde);
+    cursor: pointer;
+    font-size: 0.95em;
+    padding: 10px 0; /* Só padding vertical */
+    text-decoration: underline;
+}
+.btn-voltar:hover {
+    color: var(--cor-verde-escuro);
+}
+
+/* --- Estilo do Campo de Cupom --- */
+.cupom-group {
+    display: flex;
+    margin-top: 15px; /* Espaço acima */
+    margin-bottom: 5px; /* Espaço abaixo antes da linha de desconto */
+}
+
+.cupom-group input[type="text"] {
+    flex-grow: 1; /* Ocupa o espaço disponível */
+    padding: 10px;
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: 6px 0 0 6px; /* Arredonda só a esquerda */
+    font-size: 0.9em;
+}
+.cupom-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--cor-verde);
+}
+
+.cupom-group button {
+    padding: 0 15px;
+    border: none;
+    background-color: var(--cor-verde);
+    color: var(--cor-branco);
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 0 6px 6px 0; /* Arredonda só a direita */
+    transition: background-color 0.2s;
+}
+.cupom-group button:hover {
+    background-color: var(--cor-verde-escuro);
+}

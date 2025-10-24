@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cliente | Gestão de Serviços</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+    <header class="header-top-bar">
+        <div class="top-bar-content">
+            <div class="contact-info">
+                <span>(85) 91234-5678 (WhatsApp)</span>
+            </div>
+            <div class="admin-login">
+                <a href="{{ url_for('main.loja_index') }}" class="top-link">
+                    <i data-feather="log-out"></i> Sair do Painel
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <header class="header-main">
+        <div class="header-content">
+            <a href="{{ url_for('main.index') }}" class="logo">Gestão de Serviços</a>
+            <div class="header-actions">
+                 <span class="admin-indicator"><i data-feather="shield"></i> Painel do Admin</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="category-nav" id="category-nav">
+        <div class="nav-content">
+             <span style="color: white; font-weight: 500;">Gerenciamento</span>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <h1 class="page-title">Editando Cliente: {{ cliente.nome }}</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-layout" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;">
+            
+            <section class="add-product-form">
+                <form action="{{ url_for('main.update_cliente', id=cliente.id) }}" method="POST">
+                    <div class="form-group">
+                        <label for="nome_cliente">Nome do Cliente:</label>
+                        <input type="text" id="nome_cliente" name="nome_cliente" value="{{ cliente.nome }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_cliente">Email:</label>
+                        <input type="email" id="email_cliente" name="email_cliente" value="{{ cliente.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone_cliente">Telefone:</label>
+                        <input type="text" id="telefone_cliente" name="telefone_cliente" value="{{ cliente.telefone or '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpf_cliente">CPF:</label>
+                        <input type="text" id="cpf_cliente" name="cpf_cliente" value="{{ cliente.cpf or '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="endereco_cliente">Endereço:</label>
+                        <input type="text" id="endereco_cliente" name="endereco_cliente" value="{{ cliente.endereco or '' }}">
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Salvar Alterações</button>
+                    <a href="{{ url_for('main.index') }}" class="btn-cancel">Cancelar</a>
+                </form>
+            </section>
+        </div> 
+
+    </main>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script> 
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

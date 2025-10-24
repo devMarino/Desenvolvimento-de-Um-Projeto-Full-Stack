@@ -1,0 +1,12 @@
+# Ambiente Virtual
+.venv/
+
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
+
+# Arquivos de Configuração com Segredos
+.env
+
+# Pasta de Instancia do Flask
+instance/
